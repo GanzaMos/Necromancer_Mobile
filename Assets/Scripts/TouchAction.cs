@@ -220,6 +220,78 @@ public partial class @TouchAction : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Test"",
+            ""id"": ""30f13555-9ea2-4b16-9a68-f8cb10966d27"",
+            ""actions"": [
+                {
+                    ""name"": ""MoveCh"",
+                    ""type"": ""Value"",
+                    ""id"": ""9c66b396-0dae-4c2a-b4e9-d80b069afc75"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""24863d90-b08d-4c8a-86c9-9040e88c76ac"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveCh"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""e894c251-9bc3-4728-8793-f954c12d8297"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveCh"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""9f146811-2bbd-4030-8094-b638bb9a9179"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveCh"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""0f3be704-730d-4d75-b6a2-83b32ee96f69"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveCh"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""75af917a-6610-441a-9af5-897b3e8b9ec6"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveCh"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -230,6 +302,9 @@ public partial class @TouchAction : IInputActionCollection2, IDisposable
         m_Touch_PrimaryFingerPosition = m_Touch.FindAction("PrimaryFingerPosition", throwIfNotFound: true);
         m_Touch_SecondaryFingerPosition = m_Touch.FindAction("SecondaryFingerPosition", throwIfNotFound: true);
         m_Touch_SecondaryTouchContact = m_Touch.FindAction("SecondaryTouchContact", throwIfNotFound: true);
+        // Test
+        m_Test = asset.FindActionMap("Test", throwIfNotFound: true);
+        m_Test_MoveCh = m_Test.FindAction("MoveCh", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -342,11 +417,48 @@ public partial class @TouchAction : IInputActionCollection2, IDisposable
         }
     }
     public TouchActions @Touch => new TouchActions(this);
+
+    // Test
+    private readonly InputActionMap m_Test;
+    private ITestActions m_TestActionsCallbackInterface;
+    private readonly InputAction m_Test_MoveCh;
+    public struct TestActions
+    {
+        private @TouchAction m_Wrapper;
+        public TestActions(@TouchAction wrapper) { m_Wrapper = wrapper; }
+        public InputAction @MoveCh => m_Wrapper.m_Test_MoveCh;
+        public InputActionMap Get() { return m_Wrapper.m_Test; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(TestActions set) { return set.Get(); }
+        public void SetCallbacks(ITestActions instance)
+        {
+            if (m_Wrapper.m_TestActionsCallbackInterface != null)
+            {
+                @MoveCh.started -= m_Wrapper.m_TestActionsCallbackInterface.OnMoveCh;
+                @MoveCh.performed -= m_Wrapper.m_TestActionsCallbackInterface.OnMoveCh;
+                @MoveCh.canceled -= m_Wrapper.m_TestActionsCallbackInterface.OnMoveCh;
+            }
+            m_Wrapper.m_TestActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @MoveCh.started += instance.OnMoveCh;
+                @MoveCh.performed += instance.OnMoveCh;
+                @MoveCh.canceled += instance.OnMoveCh;
+            }
+        }
+    }
+    public TestActions @Test => new TestActions(this);
     public interface ITouchActions
     {
         void OnMoveCamera(InputAction.CallbackContext context);
         void OnPrimaryFingerPosition(InputAction.CallbackContext context);
         void OnSecondaryFingerPosition(InputAction.CallbackContext context);
         void OnSecondaryTouchContact(InputAction.CallbackContext context);
+    }
+    public interface ITestActions
+    {
+        void OnMoveCh(InputAction.CallbackContext context);
     }
 }
