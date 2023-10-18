@@ -4,33 +4,40 @@ using UnityEngine;
 
 public class ToIdleMomentSwitcher : StateMachineBehaviour
 {
-    // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
-    //override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    
-    //}
+    [SerializeField] float minTimeForIdleMoment = 5;
+    [SerializeField] float maxTimeForIdleMoment = 15;
+    [SerializeField] string idleMomentTriggerName = "IdleMomentTrigger";
+    
+    float _timer;
+    float _timeToSwitch;
+    int _idleMomentTriggerHash = 0;
+    
+    public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        if (_idleMomentTriggerHash == 0)
+        {
+            _idleMomentTriggerHash = Animator.StringToHash(idleMomentTriggerName);
+        }
 
-    // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
-    //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    
-    //}
+        _timer = 0;
+        _timeToSwitch = Random.Range(minTimeForIdleMoment, maxTimeForIdleMoment);
+    }
+
+    
+    public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        _timer += Time.deltaTime;
+
+        if (_timer > _timeToSwitch)
+        {
+            animator.SetTrigger(_idleMomentTriggerHash);
+            _timer = 0;
+        }
+    }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     //override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     //{
     //    
-    //}
-
-    // OnStateMove is called right after Animator.OnAnimatorMove()
-    //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    // Implement code that processes and affects root motion
-    //}
-
-    // OnStateIK is called right after Animator.OnAnimatorIK()
-    //override public void OnStateIK(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    // Implement code that sets up animation IK (inverse kinematics)
     //}
 }

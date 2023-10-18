@@ -142,7 +142,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Idle Moment
+  m_Name: Idle Boring
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -172,7 +172,7 @@ BlendTree:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Blend Tree
+  m_Name: Reaction Blend Tree
   m_Childs:
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: d83d6740a32d4dd4ab8a66b4da33e6a6, type: 2}
@@ -461,6 +461,7 @@ AnimatorState:
   - {fileID: 2171565200278448473}
   m_StateMachineBehaviours:
   - {fileID: 7306005868075072754}
+  - {fileID: 7345560486071169666}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -706,7 +707,7 @@ BlendTree:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Dagger_MoveTree
+  m_Name: Locomotion Blend Tree
   m_Childs:
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: 3cbf3b38202e9f841b924843754c61d1, type: 2}
@@ -972,7 +973,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Locomotion
+  m_Name: Locomotion BT
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -1024,7 +1025,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: IdleMomentTrigger
+    m_ConditionEvent: IdleBoringTrigger
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -7912180472256240715}
@@ -1115,7 +1116,7 @@ AnimatorController:
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
-    m_DefaultBool: 1
+    m_DefaultBool: 0
     m_Controller: {fileID: 0}
   - m_Name: IsDead
     m_Type: 4
@@ -1135,13 +1136,13 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: IdleMomentTrigger
+  - m_Name: IdleBoringTrigger
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: IdleMomentRND
+  - m_Name: IdleBoringtRND
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -1208,7 +1209,7 @@ BlendTree:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Blend Tree
+  m_Name: Boring Idle Blend Tree
   m_Childs:
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: 4d2c6bb4641ee074ab0e9b26384b94d7, type: 2}
@@ -1234,7 +1235,7 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: VelocityY
     m_Mirror: 0
-  m_BlendParameter: IdleMomentRND
+  m_BlendParameter: IdleBoringtRND
   m_BlendParameterY: VelocityY
   m_MinThreshold: 1
   m_MaxThreshold: 3
@@ -1297,7 +1298,7 @@ BlendTree:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Blend Tree
+  m_Name: Idle Combat Blend Tree
   m_Childs:
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: 3cbf3b38202e9f841b924843754c61d1, type: 2}
@@ -1320,7 +1321,7 @@ BlendTree:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Blend Tree
+  m_Name: Idle Blend Tree
   m_Childs:
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: 03f6c21abe7a00747914110ec4de2cba, type: 2}
@@ -1351,7 +1352,7 @@ BlendTree:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Attack Blend Tree
+  m_Name: Attack Shoot Blend Tree
   m_Childs:
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: 04d3eb0d7cf54b64ea58ff4d33a00146, type: 2}
@@ -1823,14 +1824,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numberOfRandomAnimations: 3
-  animationParameterName: IdleMomentRND
+  animationParameterName: IdleBoringtRND
 --- !u!206 &6402831216189032252
 BlendTree:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Attack Blend Tree
+  m_Name: Attack Melee Blend Tree
   m_Childs:
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: 5aaf9372b9207b94abd1fae9ca26358a, type: 2}
@@ -1922,6 +1923,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   numberOfRandomAnimations: 2
   animationParameterName: IdleRND
+--- !u!114 &7345560486071169666
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 520a48be1b500ac43b796366a5d6d6fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minTimeForIdleMoment: 5
+  maxTimeForIdleMoment: 10
+  idleMomentTriggerName: IdleMomentTrigger
 --- !u!1101 &7445147511908200150
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -1998,7 +2014,7 @@ BlendTree:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Blend Tree
+  m_Name: Dying Blend Tree
   m_Childs:
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: af3514378d214054ba6fadf7da800af7, type: 2}
