@@ -7,6 +7,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2481768553472707792, guid: 936b6d0d37cd00446a3a01c847a07e27, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 9ea4a7855bcc9524e9d7f1e8021fefe7, type: 2}
     - target: {fileID: 8399547063481931434, guid: 936b6d0d37cd00446a3a01c847a07e27, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -53,7 +57,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9212956507819494416, guid: 936b6d0d37cd00446a3a01c847a07e27, type: 3}
       propertyPath: m_Name
-      value: Peasant
+      value: Peasant_Unarmed
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 936b6d0d37cd00446a3a01c847a07e27, type: 3}
