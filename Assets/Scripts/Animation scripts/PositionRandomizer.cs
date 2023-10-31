@@ -1,28 +1,50 @@
+using System.Collections;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class RandomAnimation : StateMachineBehaviour
+public class PositionRandomizer : StateMachineBehaviour
 {
-    [SerializeField] int numberOfRandomAnimations;
-    [SerializeField] string animationParameterName;
-
-    [SerializeField] bool allowDecimalNumbers = false;
+    [SerializeField] string хParameterName;
+    [SerializeField] float minX;
+    [SerializeField] float maxX;
+    int _хHash;
     
-    int _animationHash;
-    bool _isHashed = false;
+    [Space(5f)]
+    [SerializeField] string yParameterName;
+    [SerializeField] float minY;
+    [SerializeField] float maxY;
+    int _yHash;
 
+    [Tooltip("Activate if you want to keep X and Y parameters same each transition to this Clip")]
+    [SerializeField] bool randomizeEveryClipStart = true;
+    
+    bool _isHashed = false;
+    bool _alreadyRandomized = false;
+    
+    
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (_isHashed == false)
-        {
-            _animationHash = Animator.StringToHash(animationParameterName);
-            _isHashed = true;
-        }
+        HashingStrings();
         
-        if (allowDecimalNumbers == false)
-            animator.SetFloat(_animationHash, Random.Range(1, numberOfRandomAnimations + 1));
-        else
-            animator.SetFloat(_animationHash, Random.Range(1f, (float)numberOfRandomAnimations + 1f));
+        if (randomizeEveryClipStart == false && _alreadyRandomized == true) return;
+        RandomizeXY(animator);
+        _alreadyRandomized = true;
+    }
+    
+    void HashingStrings()
+    {
+        if (_isHashed == true) return;
+
+        _хHash = Animator.StringToHash(хParameterName);
+        _yHash = Animator.StringToHash(yParameterName);
+        _isHashed = true;
+    }
+
+    void RandomizeXY(Animator animator)
+    {
+        animator.SetFloat(_хHash, Random.Range(minX, maxX));
+        animator.SetFloat(_yHash, Random.Range(minY, maxY));
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
