@@ -3,10 +3,10 @@ using UnityEngine.Animations.Rigging;
 
 public class BowIKHandler : MonoBehaviour
 {
-    [SerializeField] GameObject upperLimbIK;
-    [SerializeField] GameObject lowerLimbIK;
-    [SerializeField] GameObject stringIK;
-    [SerializeField] GameObject mainBoneIK;
+    [SerializeField] UnityEngine.GameObject upperLimbIK;
+    [SerializeField] UnityEngine.GameObject lowerLimbIK;
+    [SerializeField] UnityEngine.GameObject stringIK;
+    [SerializeField] UnityEngine.GameObject mainBoneIK;
 
     float _targetStringWeight, _stringTimer, _stringDuration;
     float _angleWeight,  _targetAngleWeight,  _angleTimer,  _angleDuration;
