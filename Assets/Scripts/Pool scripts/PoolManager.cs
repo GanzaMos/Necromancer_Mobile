@@ -1,10 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Pool_scripts
 {
     public class PoolManager : MonoBehaviour
     {
+        public static PoolManager Instance { get; private set; }
+
+        void Awake()
+        {
+            if (Instance == null)
+                Instance = this;
+            else
+                Destroy(gameObject);
+        }
+
         Dictionary<string, GameObjectPool> _poolDict = new Dictionary<string, GameObjectPool>();
         public int instancesAtStart = 50;
         public int maxInstanceNumber = 500;

@@ -1,7 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Pool_scripts;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -15,16 +13,11 @@ public class ArrowHandler : MonoBehaviour
     float _torqueForce;
     
     [SerializeField] string tagToHit;
-
-    [SerializeField] int gizmosNumber;
-    [SerializeField] float gizmosDistance;
-
-    public PoolManager PoolManager { get; set; }
+    
     Rigidbody _arrowRigidbody;
     Transform _launchPoint;
 
     bool _isFlying = false;
-    
 
     void Awake()
     {
@@ -34,13 +27,17 @@ public class ArrowHandler : MonoBehaviour
 
     void Start()
     {
+        NullCheck();
+        _torqueForce = Random.Range(torqueForceMin, torqueForceMax);
+    }
+
+    void NullCheck()
+    {
         if (_arrowRigidbody == null) Debug.Log($"Can't get {_arrowRigidbody.GetType().Name} for {GetType().Name} in {gameObject.name}", gameObject);
         if (_launchPoint == null)    Debug.Log($"Can't get {_launchPoint.GetType().Name} for {GetType().Name} in {gameObject.name}", gameObject);
         if (torquePart == null)      Debug.Log($"Can't get {_launchPoint.GetType().Name} for {GetType().Name} in {gameObject.name}", gameObject);
-
-        _torqueForce = Random.Range(torqueForceMin, torqueForceMax);
     }
-    
+
     void FixedUpdate()
     {
         if (_isFlying == false) return;
@@ -79,38 +76,10 @@ public class ArrowHandler : MonoBehaviour
             _arrowRigidbody.isKinematic = true;
             gameObject.transform.SetParent(collision.gameObject.transform);
             
-            PoolManager.Release(gameObject);
+            PoolManager.Instance.Release(gameObject);
         }
     }
     
-    // private void OnDrawGizmos()
-    // {
-    //     DrawTrajectoryPrediction();
-    // }
-
-    void DrawTrajectoryPrediction()
-    {
-        Vector3 initialPosition = transform.position;
-        Vector3 initialVelocity = transform.forward * launchForce;
-
-        for (int i = 0; i < gizmosNumber; i++)
-        {
-            float time = i * gizmosDistance;
-            Vector3 position = CalculateProjectilePosition(initialPosition, initialVelocity, time);
-
-            Gizmos.color = Color.blue;
-            Gizmos.DrawSphere(position, 0.05f);
-        }
-    }
-
-    Vector3 CalculateProjectilePosition(Vector3 initialPosition, Vector3 initialVelocity, float time)
-    {
-        Vector3 gravity = Physics.gravity;
-
-        // Projectile motion equation
-        Vector3 position = initialPosition + initialVelocity * time + 0.5f * gravity * time * time;
-
-        return position;
-    }
+   
 
 }
