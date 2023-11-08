@@ -8,44 +8,75 @@ using UnityEngine;
 
 public class ArrowSpawner : MonoBehaviour
 {
+    [Header ("Arrow properties")]
+    
     [SerializeField] GameObject arrowPrefab;
     
-    [Tooltip("How far the arrow should shoot, in Unity units")]
-    [SerializeField] float maxArrowDistance;
-    
+    [Tooltip("How far the arrow should shoot, in Unity units"), SerializeField] 
+    float maxArrowDistance;
+
+    [Header("Debugger"), Space(5)] 
+    [SerializeField] bool showTrajectory;
     [SerializeField] int gizmosNumber;
     [SerializeField] float gizmosDistance;
-    
-    ArrowCalculator _arrowCalculator;
 
-    float _maxVelocity;
-    
+    [SerializeField] bool useHighTrajectory;
+    [SerializeField] Transform testTarget1;
+    [SerializeField] Transform testTarget2;
+    [SerializeField] Transform testTarget3;
+
+    Transform _thisTransform;
+    [SerializeField] float _maxVelocity;
+
     void Awake()
     {
-        _arrowCalculator = GetComponent<ArrowCalculator>();
+        _thisTransform = transform;
     }
-
+    
     void Start()
     {
-        NullCheck();
-        _maxVelocity = _arrowCalculator.GetMaxVelocity(maxArrowDistance);
+        _maxVelocity = ArrowCalculator.Instance.GetMaxVelocity(maxArrowDistance);
     }
-
-    void NullCheck()
-    {
-       
-        if (_arrowCalculator == null) 
-            Debug.Log($"Can't get {_arrowCalculator.GetType().Name} for {GetType().Name} in {gameObject.name}", gameObject);
-    }
-
+    
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Alpha1)) ShootArrow(testTarget1);
+        if (Input.GetKeyDown(KeyCode.Alpha2)) ShootArrow(testTarget2);
+        if (Input.GetKeyDown(KeyCode.Alpha3)) ShootArrow(testTarget3);
+    }
+
+    void ShootArrow(Transform target)
+    {
+        if (SetAngleToShoot(target) == false) return;
+        GameObject arrowInstance = PoolManager.Instance.Get(arrowPrefab);
+        SetPositionAndRotation(arrowInstance);
+        SetArrowParameters(arrowInstance);
+    }
+
+    bool SetAngleToShoot(Transform target)
+    {
+        ArrowCalculator.GetShootAngleResult angleResult = 
+            ArrowCalculator.Instance.GetShootAngle(transform.position, target.position, _maxVelocity);
+
+        if (angleResult.DiscriminantIsNegative == true)
         {
-            GameObject arrowInstance = PoolManager.Instance.Get(arrowPrefab);
-            SetPositionAndRotation(arrowInstance);
-            SetArrowParameters(arrowInstance);
+            Debug.Log("Can't reach the target, discriminant is negative");
+            return false;
         }
+
+        if (useHighTrajectory == true)
+        {
+            float highAngle = angleResult.AngleHigh;
+            transform.rotation = Quaternion.Euler(-highAngle, 0, 0);
+            return true;
+        }
+        else
+        {
+            float lowAngle = angleResult.AngleLow;
+            transform.rotation = Quaternion.Euler(-lowAngle, 0, 0);
+            return true;
+        }
+
     }
 
     void SetPositionAndRotation(GameObject arrowInstance)
@@ -58,12 +89,13 @@ public class ArrowSpawner : MonoBehaviour
     void SetArrowParameters(GameObject arrowInstance)
     {
         ArrowHandler arrowHandler = arrowInstance.GetComponent<ArrowHandler>();
-        arrowHandler.LaunchArrow();
+        arrowHandler.LaunchArrow(_maxVelocity);
     }
     
-    private void OnDrawGizmos()
+    void OnDrawGizmos()
     {
-        DrawTrajectoryPrediction();
+        if (showTrajectory)
+            DrawTrajectoryPrediction();
     }
 
     void DrawTrajectoryPrediction()

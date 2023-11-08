@@ -3,15 +3,32 @@ using UnityEngine;
 
 namespace Fighter_scripts
 {
-    public class ArrowCalculator : MonoBehaviour
+    public class ArrowCalculator
     {
-        float _maxVelocity;
+        #region Singleton
+
+        static ArrowCalculator _instance;
+        public static ArrowCalculator Instance 
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new ArrowCalculator();
+                }
+                return _instance;
+            }
+            private set { }
+        }
+
+        #endregion
         
         GetShootAngleResult _getShootAngleResult;
-
+        
         public float GetMaxVelocity(float maxShootDistance)
         {
-            return _maxVelocity = Mathf.Sqrt(maxShootDistance * Physics.gravity.magnitude);
+             float maxVelocity = Mathf.Sqrt(maxShootDistance * Physics.gravity.magnitude);
+             return maxVelocity;
         }
 
         public struct GetShootAngleResult
@@ -55,18 +72,18 @@ namespace Fighter_scripts
                 return _getShootAngleResult;
             }
             else if (discriminant == 0)
-            {
+            {   
                 float angle = Mathf.Atan((vel * vel) / (g * x));
-                _getShootAngleResult.AngleLow = angle;
-                _getShootAngleResult.AngleHigh = angle;
+                _getShootAngleResult.AngleLow = angle * Mathf.Rad2Deg;
+                _getShootAngleResult.AngleHigh = angle * Mathf.Rad2Deg;
                 return _getShootAngleResult;
             }
             else
             {
                 float angleLow = Mathf.Atan((vel * vel - Mathf.Sqrt(discriminant)) / (g * x));
                 float angleHigh = Mathf.Atan((vel * vel + Mathf.Sqrt(discriminant)) / (g * x));
-                _getShootAngleResult.AngleLow = angleLow;
-                _getShootAngleResult.AngleHigh = angleHigh;
+                _getShootAngleResult.AngleLow = angleLow * Mathf.Rad2Deg;
+                _getShootAngleResult.AngleHigh = angleHigh * Mathf.Rad2Deg;
                 return _getShootAngleResult;
             }
         }

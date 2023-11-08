@@ -5,8 +5,6 @@ using Random = UnityEngine.Random;
 
 public class ArrowHandler : MonoBehaviour
 {
-    [SerializeField] float launchForce = 10f;
-    
     [SerializeField] Transform torquePart;
     [SerializeField] float torqueForceMin = 2f;
     [SerializeField] float torqueForceMax = 10f;
@@ -28,7 +26,6 @@ public class ArrowHandler : MonoBehaviour
     void Start()
     {
         NullCheck();
-        _torqueForce = Random.Range(torqueForceMin, torqueForceMax);
     }
 
     void NullCheck()
@@ -46,10 +43,11 @@ public class ArrowHandler : MonoBehaviour
         RotateArrowZAxis();
     }
     
-    public void LaunchArrow()
+    public void LaunchArrow(float launchForce)
     {
         _isFlying = true;
         _arrowRigidbody.isKinematic = false;
+        _torqueForce = Random.Range(torqueForceMin, torqueForceMax);
         _arrowRigidbody.AddForce(_launchPoint.forward * launchForce, ForceMode.VelocityChange);
     }
     
