@@ -40,6 +40,22 @@ public class ArrowSpawner : MonoBehaviour
     
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            var getXZDistanceResult = new ArrowCalculator.GetXZDistanceResult();
+            getXZDistanceResult =
+                ArrowCalculator.Instance.GetXZDistanceToShootTarget(
+                    transform.position, 
+                    testTarget1.position,
+                    _maxVelocity);
+            
+            if(getXZDistanceResult.CanReachTheTarget == false)
+                Debug.Log("Can't reach the target with current velocity");
+            else
+                Debug.Log(getXZDistanceResult.Distance);
+        }
+        
+        
         if (Input.GetKeyDown(KeyCode.Alpha1)) ShootArrow(testTarget1);
         if (Input.GetKeyDown(KeyCode.Alpha2)) ShootArrow(testTarget2);
         if (Input.GetKeyDown(KeyCode.Alpha3)) ShootArrow(testTarget3);
@@ -59,7 +75,7 @@ public class ArrowSpawner : MonoBehaviour
         ArrowCalculator.GetShootAngleResult angleResult = 
             ArrowCalculator.Instance.GetShootAngle(transform.position, target.position, _maxVelocity);
 
-        if (angleResult.DiscriminantIsNegative == true)
+        if (angleResult.CanReachTheTarget == false)
         {
             Debug.Log("Can't reach the target, discriminant is negative");
             return false;
