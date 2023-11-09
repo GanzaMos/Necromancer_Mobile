@@ -47,13 +47,14 @@ public class ArrowSpawner : MonoBehaviour
 
     void ShootArrow(Transform target)
     {
-        if (SetAngleToShoot(target) == false) return;
+        transform.LookAt(new Vector3(target.position.x, 0, target.position.z));
+        if (SetSpawnerXAngleToShoot(target) == false) return;
         GameObject arrowInstance = PoolManager.Instance.Get(arrowPrefab);
         SetPositionAndRotation(arrowInstance);
         SetArrowParameters(arrowInstance);
     }
 
-    bool SetAngleToShoot(Transform target)
+    bool SetSpawnerXAngleToShoot(Transform target)
     {
         ArrowCalculator.GetShootAngleResult angleResult = 
             ArrowCalculator.Instance.GetShootAngle(transform.position, target.position, _maxVelocity);
@@ -67,16 +68,20 @@ public class ArrowSpawner : MonoBehaviour
         if (useHighTrajectory == true)
         {
             float highAngle = angleResult.AngleHigh;
-            transform.rotation = Quaternion.Euler(-highAngle, 0, 0);
+            SetXRotation(highAngle);
             return true;
         }
         else
         {
             float lowAngle = angleResult.AngleLow;
-            transform.rotation = Quaternion.Euler(-lowAngle, 0, 0);
+            SetXRotation(lowAngle);
             return true;
         }
+    }
 
+    void SetXRotation(float angle)
+    {
+        transform.rotation = Quaternion.Euler(-angle, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
     }
 
     void SetPositionAndRotation(GameObject arrowInstance)

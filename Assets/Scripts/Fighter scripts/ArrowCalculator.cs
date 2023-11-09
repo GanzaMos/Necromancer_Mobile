@@ -59,7 +59,7 @@ namespace Fighter_scripts
             float x = Mathf.Sqrt((vectorToTarget.x * vectorToTarget.x) + (vectorToTarget.z * vectorToTarget.z));
             
             //getting vertical distance, it will be our Y
-            float y = -vectorToTarget.y;
+            float y = vectorToTarget.y;
             
             float g = Physics.gravity.magnitude;
             
