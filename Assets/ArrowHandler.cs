@@ -58,6 +58,7 @@ public class ArrowHandler : MonoBehaviour
             Vector3 arrowDirection = _arrowRigidbody.velocity.normalized;
             Vector3 localArrowDirection = _launchPoint.InverseTransformPoint(arrowDirection);
             transform.forward = arrowDirection;
+            
         }
     }
 

@@ -40,22 +40,6 @@ public class ArrowSpawner : MonoBehaviour
     
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            var getXZDistanceResult = new ArrowCalculator.GetXZDistanceResult();
-            getXZDistanceResult =
-                ArrowCalculator.Instance.GetXZDistanceToShootTarget(
-                    transform.position, 
-                    testTarget1.position,
-                    _maxVelocity);
-            
-            if(getXZDistanceResult.CanReachTheTarget == false)
-                Debug.Log("Can't reach the target with current velocity");
-            else
-                Debug.Log(getXZDistanceResult.Distance);
-        }
-        
-        
         if (Input.GetKeyDown(KeyCode.Alpha1)) ShootArrow(testTarget1);
         if (Input.GetKeyDown(KeyCode.Alpha2)) ShootArrow(testTarget2);
         if (Input.GetKeyDown(KeyCode.Alpha3)) ShootArrow(testTarget3);
@@ -63,36 +47,23 @@ public class ArrowSpawner : MonoBehaviour
 
     void ShootArrow(Transform target)
     {
-        transform.LookAt(new Vector3(target.position.x, 0, target.position.z));
-        if (SetSpawnerXAngleToShoot(target) == false) return;
+        float angleRad = ArrowCalculator.Instance.GetShootAngle(transform.position, target.position, _maxVelocity).AngleLow;
+        
+        float timeToHitTarget = ArrowCalculator.Instance
+            .GetFlightTime(transform.position, target.position, _maxVelocity, angleRad).Time;
+        
+        Vector3 targetVelocity = target.GetComponent<Rigidbody>().velocity;
+
+        Vector3 targetFuturePosition = ArrowCalculator.Instance.GetTargetPositionPrediction(target.position, targetVelocity, timeToHitTarget);
+        
+        float predictedAngleRad = ArrowCalculator.Instance.GetShootAngle(transform.position, targetFuturePosition, _maxVelocity).AngleLow;
+        
+        transform.LookAt(new Vector3(targetFuturePosition.x, 0, targetFuturePosition.z));
+        SetXRotation(predictedAngleRad * Mathf.Rad2Deg);
+        
         GameObject arrowInstance = PoolManager.Instance.Get(arrowPrefab);
         SetPositionAndRotation(arrowInstance);
         SetArrowParameters(arrowInstance);
-    }
-
-    bool SetSpawnerXAngleToShoot(Transform target)
-    {
-        ArrowCalculator.GetShootAngleResult angleResult = 
-            ArrowCalculator.Instance.GetShootAngle(transform.position, target.position, _maxVelocity);
-
-        if (angleResult.CanReachTheTarget == false)
-        {
-            Debug.Log("Can't reach the target, discriminant is negative");
-            return false;
-        }
-
-        if (useHighTrajectory == true)
-        {
-            float highAngle = angleResult.AngleHigh;
-            SetXRotation(highAngle);
-            return true;
-        }
-        else
-        {
-            float lowAngle = angleResult.AngleLow;
-            SetXRotation(lowAngle);
-            return true;
-        }
     }
 
     void SetXRotation(float angle)
